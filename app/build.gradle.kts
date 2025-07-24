@@ -62,8 +62,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.36.0")
-    implementation("com.google.accompanist:accompanist-pager:0.36.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
     implementation("androidx.compose.runtime:runtime-livedata:1.8.3")
     implementation("com.github.bumptech.glide:glide:4.13.0")
