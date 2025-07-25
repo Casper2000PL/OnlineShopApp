@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.casper.onlineshopapp.Activity.BaseActivity
+import com.casper.onlineshopapp.Domain.CategoryModel
 import com.casper.onlineshopapp.Domain.SliderModel
 import com.casper.onlineshopapp.R
 import com.casper.onlineshopapp.ViewModel.MainViewModel
@@ -56,8 +58,10 @@ fun DashboardScreen() {
     val viewModel = MainViewModel()
 
     val banners = remember { mutableStateListOf<SliderModel>() }
+    val categories = remember { mutableStateListOf<CategoryModel>() }
 
     var showBannerLoading by remember{ mutableStateOf(true) }
+    var showCategoryLoading by remember{ mutableStateOf(true) }
 
     // banner
     LaunchedEffect(Unit) {
@@ -65,6 +69,15 @@ fun DashboardScreen() {
             banners.clear()
             banners.addAll(it)
             showBannerLoading = false
+        }
+    }
+
+    // category
+    LaunchedEffect(Unit) {
+        viewModel.loadCategory().observeForever {
+            categories.clear()
+            categories.addAll(it)
+            showCategoryLoading = false
         }
     }
 
@@ -129,6 +142,37 @@ fun DashboardScreen() {
                     Banners(banners)
                 }
             }
+
+            // Categories
+            item {
+                Text(
+                    text = "Categories",
+                    color = Color.Black,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp)
+                )
+            }
+
+            item {
+                if (showCategoryLoading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    CategoryList(categories)
+                }
+            }
+
+
         }
     }
 }
