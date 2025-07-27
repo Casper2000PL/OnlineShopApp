@@ -48,24 +48,35 @@ import com.casper.onlineshopapp.ui.theme.OnlineShopAppTheme
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContent {
-            DashboardScreen()
+            OnlineShopAppTheme {
+                Scaffold(
+                ) { innerPadding ->
+                    DashboardScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        onCartClick = {}
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    modifier: Modifier = Modifier, // Add modifier parameter
+    onCartClick: () -> Unit
+) {
     val viewModel = MainViewModel()
 
     val banners = remember { mutableStateListOf<SliderModel>() }
     val categories = remember { mutableStateListOf<CategoryModel>() }
     val bestSeller = remember { mutableStateListOf<ItemModel>() }
 
-    var showBannerLoading by remember{ mutableStateOf(true) }
-    var showCategoryLoading by remember{ mutableStateOf(true) }
-    var showBestSellerLoading by remember{ mutableStateOf(true) }
+    var showBannerLoading by remember { mutableStateOf(true) }
+    var showCategoryLoading by remember { mutableStateOf(true) }
+    var showBestSellerLoading by remember { mutableStateOf(true) }
 
     // banner
     LaunchedEffect(Unit) {
@@ -95,24 +106,29 @@ fun DashboardScreen() {
     }
 
     ConstraintLayout(
-        modifier = Modifier.background(Color.White)
+        // Apply the modifier passed from Scaffold here
+        modifier = modifier
+            .fillMaxSize() // fillMaxSize is appropriate here
+            .background(Color.White)
     ) {
         val (scrollList, bottomMenu) = createRefs()
 
-        LazyColumn(modifier = Modifier
-                .fillMaxSize()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize() // This LazyColumn will respect the padding from its parent (ConstraintLayout)
                 .constrainAs(scrollList) {
                     top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
+                    bottom.linkTo(parent.bottom) // Consider if bottomMenu will overlap or if padding handles it
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
         ) {
             item {
-                Row(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 70.dp)
-                    .padding(horizontal = 16.dp),
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth() // Changed from fillMaxSize
+                        .padding(top = 70.dp) // This top padding might need adjustment if you add a TopAppBar
+                        .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -126,7 +142,7 @@ fun DashboardScreen() {
                         )
                     }
 
-                    Row() {
+                    Row { // Removed extra ()
                         Image(
                             painter = painterResource(R.drawable.search_icon),
                             contentDescription = null
@@ -145,7 +161,7 @@ fun DashboardScreen() {
                 if (showBannerLoading) {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth() // Changed from fillMaxSize
                             .height(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -189,12 +205,12 @@ fun DashboardScreen() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp)
+                        .padding(top = 12.dp)
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "BEst Seller Product",
+                        text = "Best Seller Product",
                         color = Color.Black,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
@@ -208,23 +224,32 @@ fun DashboardScreen() {
             }
 
             item {
-               if(showBestSellerLoading) {
-                   Box(
-                       modifier = Modifier
-                           .fillMaxWidth()
-                           .height(200.dp),
-                       contentAlignment = Alignment.Center
-                   ) {
-                       CircularProgressIndicator()
-                   }
-               } else {
-                   ListItems(bestSeller)
+                if (showBestSellerLoading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    ListItems(bestSeller)
 
-               }
+                }
             }
-
-
         }
+
+        // Bottom Navigation Menu
+        BottomMenu(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(bottomMenu) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            onItemClick = onCartClick
+        )
     }
 }
-
