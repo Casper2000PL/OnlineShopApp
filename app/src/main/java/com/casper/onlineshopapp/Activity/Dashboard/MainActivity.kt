@@ -1,7 +1,6 @@
 package com.casper.onlineshopapp.Activity.Dashboard
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
@@ -33,13 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.casper.onlineshopapp.Activity.BaseActivity
 import com.casper.onlineshopapp.Domain.CategoryModel
-import com.casper.onlineshopapp.Domain.ItemModel
+import com.casper.onlineshopapp.Domain.ItemsModel
 import com.casper.onlineshopapp.Domain.SliderModel
 import com.casper.onlineshopapp.R
 import com.casper.onlineshopapp.ViewModel.MainViewModel
@@ -72,7 +70,7 @@ fun DashboardScreen(
 
     val banners = remember { mutableStateListOf<SliderModel>() }
     val categories = remember { mutableStateListOf<CategoryModel>() }
-    val bestSeller = remember { mutableStateListOf<ItemModel>() }
+    val bestSeller = remember { mutableStateListOf<ItemsModel>() }
 
     var showBannerLoading by remember { mutableStateOf(true) }
     var showCategoryLoading by remember { mutableStateOf(true) }
@@ -127,7 +125,7 @@ fun DashboardScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth() // Changed from fillMaxSize
-                        .padding(top = 70.dp) // This top padding might need adjustment if you add a TopAppBar
+                        .padding(top = 32.dp) // This top padding might need adjustment if you add a TopAppBar
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically

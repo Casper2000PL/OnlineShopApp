@@ -1,8 +1,11 @@
 package com.casper.onlineshopapp.Domain
 
-import java.io.Serializable
 
-data class ItemModel(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class ItemsModel(
     var title: String = "",
     var description: String = "",
     var picUrl: ArrayList<String> = ArrayList(),
@@ -15,4 +18,4 @@ data class ItemModel(
     var sellerName: String = "",
     var sellerPic: String = "",
     var sellerTel: String = "",
-): Serializable
+) : Parcelable

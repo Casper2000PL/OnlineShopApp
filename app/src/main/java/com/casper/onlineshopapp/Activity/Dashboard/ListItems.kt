@@ -1,5 +1,6 @@
 package com.casper.onlineshopapp.Activity.Dashboard
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,12 +31,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
-import com.casper.onlineshopapp.Domain.ItemModel
+import com.casper.onlineshopapp.Activity.Detail.DetailActivity
+import com.casper.onlineshopapp.Domain.ItemsModel
 import com.casper.onlineshopapp.R
 
 @Composable
-fun ListItems(items: List<ItemModel>) {
+fun ListItems(items: List<ItemsModel>) {
     LazyRow(
         modifier = Modifier
             .padding(top = 8.dp),
@@ -50,7 +53,7 @@ fun ListItems(items: List<ItemModel>) {
 
 @Composable
 fun BestSellerItem(
-    items: List<ItemModel>,
+    items: List<ItemsModel>,
     pos: Int
 ) {
     val context = LocalContext.current
@@ -72,7 +75,11 @@ fun BestSellerItem(
                 .clip(RoundedCornerShape(10.dp))
                 .height(180.dp)
                 .clickable {
+                    val intent = Intent(context, DetailActivity::class.java).apply {
+                        putExtra("object", items[pos])
+                    }
 
+                    startActivity(context, intent, null)
                 },
             contentScale = ContentScale.Crop
         )
